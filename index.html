@@ -7,6 +7,8 @@
     <title>Food Website</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 </head>
 <body>
 
@@ -437,6 +439,57 @@
     </div>
 
 
+<!--Order-->
+
+<div class="order" id="Order">
+    <h1><span>Order</span>Now</h1>
+
+    <div class="order_main">
+
+        <div class="order_image">
+            <img src="image/order_image.png">
+        </div>
+
+        <form>
+
+            <div class="input">
+                <p>Name</p>
+                <input type="text" name="name" placeholder="you name">
+            </div>
+
+            <div class="input">
+                <p>Email</p>
+                <input type="email" name="email" placeholder="you email">
+            </div>
+
+            <div class="input">
+                <p>Number</p>
+                <input placeholder="you number"name="number" >
+            </div>
+
+            <div class="input">
+                <p>How Much</p>
+                <input type="number"name="quantity"  placeholder="how many order">
+            </div>
+
+            <div class="input">
+                <p>You Order</p>
+                <input placeholder="food name"name="food" >
+            </div>
+
+            <div class="input">
+                <p>Address</p>
+                <input placeholder="you Address"name="address" >
+            </div>
+
+            <a  class="order_btn">Order Now</a>
+
+        </form>
+
+    </div>
+
+</div>
+
 
     <!--Footer-->
 
@@ -489,7 +542,39 @@
     </footer>
 
     <script>
-        
+        const { createClient } = supabase
+        const _supabase = createClient('https://aztnatmuvqqwptumuozh.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6dG5hdG11dnFxd3B0dW11b3poIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzkzODIxNzUsImV4cCI6MTk5NDk1ODE3NX0.5oR5rk1YdOFdAFARyye3eiRh3cUx3d4vYgxKEA8y5zE');
+
+        const form = document.querySelector('form');
+        const orderBtn = document.querySelector('.order_btn');
+
+        orderBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        try {
+            const { data, error } = await _supabase.from('orders').insert([
+            {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                number: formData.get('number'),
+                quantity: formData.get('quantity'),
+                food: formData.get('food'),
+                address: formData.get('address')
+            }
+            ]);
+
+            if (error) {
+            throw new Error(error.message);
+            }
+            if(data) {
+                alert("Submitted successfully")
+            }
+        } catch (error) {
+            console.error('Error submitting order:', error.message);
+        }
+        });
     </script>
 
     
